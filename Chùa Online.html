@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chùa Online</title>
+<style>
+:root{--bg:#1c1410;--card:#2a1e17;--ink:#f3e6cf;--mute:#a8957a;--gold:#e8b95a;--red:#8c2a1f;--line:#4a3628;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#1c1410}}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:84px}
+.top{display:flex;justify-content:space-between;padding:12px 14px;font-size:13px;color:var(--mute)}
+.top b{display:block;color:var(--gold);font-size:17px}
+.stage{position:relative;height:230px;margin:0 12px;border-radius:16px;overflow:hidden;background:linear-gradient(#5a2a1c,#2a140e 60%,#3a2418 60%)}
+.halo{position:absolute;left:50%;top:14px;width:120px;height:120px;margin-left:-60px;border-radius:50%;background:radial-gradient(#ffe9a8,#e8b95a 50%,transparent 70%);opacity:.7;animation:glow 4s infinite}
+@keyframes glow{50%{opacity:1;transform:scale(1.06)}}
+.buddha{position:absolute;left:50%;top:40px;margin-left:-45px;font-size:0}
+.buddha i{display:block;margin:0 auto;background:linear-gradient(#f6d27a,#c8912c)}
+.b-head{width:34px;height:36px;border-radius:50%}
+.b-body{width:70px;height:46px;border-radius:30px 30px 6px 6px;margin-top:-4px!important}
+.b-lap{width:110px;height:22px;border-radius:40px;margin:-8px -10px 0!important}
+.altar{position:absolute;left:50%;top:138px;width:130px;margin-left:-65px;height:10px;background:#7a4a22;border-radius:3px}
+.mat{position:absolute;left:50%;bottom:16px;width:120px;height:30px;margin-left:-60px;background:#8c2a1f;border:3px solid #c9a24c;border-radius:6px}
+.monk{position:absolute;left:50%;bottom:30px;margin-left:-24px;width:48px;transition:all .4s;text-align:center}
+.monk .h{width:30px;height:30px;margin:0 auto;background:#e58a3c;border-radius:50%}
+.monk .r{width:48px;height:34px;margin-top:-4px;border-radius:20px 20px 6px 6px;background:linear-gradient(90deg,#3b6aa0 50%,#e8b95a 50%)}
+.monk.stand{bottom:56px;transform:translateY(-6px)}
+.monk.stand .r{height:48px}
+.monk.knee .r{height:26px}
+.monk.bow{transform:translateY(5px) scale(1,.92)}
+.hint{position:absolute;left:8px;bottom:8px;font-size:11px;color:var(--mute)}
+.panel{display:none;padding:14px}.panel.on{display:block}
+h2{font-size:17px;margin:4px 0 8px;color:var(--gold)}
+p.s{font-size:13px;color:var(--mute);margin:0 0 12px;line-height:1.5}
+button{font:inherit;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+button.pri{background:var(--gold);color:#2a1a08;border-color:var(--gold);font-weight:600}
+button.sel{border-color:var(--gold);color:var(--gold)}
+button:active{transform:scale(.97)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.big{width:100%;padding:16px;font-size:16px}
+.fish{font-size:48px;text-align:center;margin:8px 0;user-select:none;transition:transform .08s}
+.fish.hit{transform:scale(.88)}
+.chant{height:190px;overflow-y:auto;background:var(--card);border-radius:12px;padding:12px;text-align:center;scroll-behavior:smooth;margin-bottom:10px}
+.chant div{padding:6px;color:#8a7761;font-size:15px;transition:.3s}
+.chant div.on{color:var(--gold);font-size:19px;font-weight:600}
+.chant div.done{color:var(--ink)}
+.yard{position:relative;height:260px;border-radius:14px;background:#4a3a28;overflow:hidden;touch-action:none;cursor:crosshair;margin-bottom:10px}
+.leaf{position:absolute;font-size:22px;transition:opacity .3s,transform .3s;pointer-events:none}
+.leaf.gone{opacity:0;transform:scale(.3) translateY(-20px)}
+.box{position:relative;height:120px;margin:10px auto;width:160px;background:var(--red);border:3px solid #c9a24c;border-radius:10px;text-align:center;line-height:114px;color:#f6d27a;font-weight:700}
+.coin{position:absolute;left:50%;top:-30px;font-size:26px;animation:drop .8s forwards}
+@keyframes drop{to{top:50px;opacity:0}}
+input[type=text]{width:100%;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;margin-bottom:10px}
+.log{font-size:12px;color:var(--mute);line-height:1.7}
+.tube{font-size:80px;text-align:center;margin:6px 0}
+.tube.shake{animation:sh .15s 8}
+@keyframes sh{25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+.que{background:var(--card);border:1px solid var(--gold);border-radius:14px;padding:14px;line-height:1.6;font-size:14px;display:none}
+.que h3{margin:0 0 6px;color:var(--gold)}
+.que em{display:block;margin:8px 0;color:var(--ink)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:#140d0a;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;border-radius:0;background:none;font-size:11px;padding:8px 2px;color:var(--mute)}
+nav button span{display:block;font-size:20px}
+nav button.on{color:var(--gold)}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--gold);color:#2a1a08;padding:8px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+.stage{height:300px;touch-action:none}
+.stage canvas,#yardc{width:100%;height:100%;display:block}
+#yardc{height:340px;border-radius:14px;touch-action:none;cursor:grab;margin-bottom:10px}
+.crowd{margin:8px 14px 0;font-size:12px;color:var(--gold)}
+.me{padding:0 14px;margin:8px 0 0;flex-wrap:nowrap}
+select{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px;font:inherit;max-width:48%}
+.chant div::first-letter{text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="top">
+<div>Công đức<b id="sMerit">0</b></div>
+<div>Câu niệm<b id="sChant">0</b></div>
+<div>Cúng dường<b id="sMoney">0đ</b></div>
+<div>Danh hiệu<b id="sRank">Thiện tín</b></div>
+</div>
+
+<div class="stage" id="stage"><canvas id="hall"></canvas><div class="hint" id="hint" style="text-shadow:0 1px 3px #000">Chạm vào sàn hoặc dùng WASD / phím mũi tên để đi. Đến gần đệm rồi bấm Quỳ.</div></div>
+<div class="crowd" id="crowd">🌐 Đang kết nối…</div>
+<div class="row me"><input type="text" id="nm" maxlength="16" placeholder="Pháp danh" style="flex:1;margin:0"><select id="tg"></select></div>
+<section class="panel on" id="p-nam">
+<h2>Niệm Phật</h2>
+<p class="s">Đi tới một tấm đệm, bấm Quỳ xuống, rồi gõ mõ niệm "Nam mô A Di Đà Phật". Mỗi câu niệm được 1 công đức.</p>
+<div class="row"><button class="pri" id="kneelBtn" style="flex:1">🧎 Quỳ xuống</button><button id="autoBtn" style="flex:1">⏵ Tự động niệm</button></div>
+<div class="fish" id="fish">🪘</div>
+<button class="big pri" id="hit">Gõ mõ · Nam mô A Di Đà Phật</button>
+<p class="s" style="text-align:center;margin-top:10px" id="chantLine">Chưa niệm câu nào</p>
+</section>
+
+<section class="panel" id="p-chu">
+<h2>Tụng chú</h2>
+<p class="s">Cần quỳ trước khi tụng. Hoàn thành một bài được +10 công đức.</p>
+<div class="row" id="chuTabs"></div>
+<div class="chant" id="chant"></div>
+<div class="row"><button class="pri" id="chuGo" style="flex:1">▶ Bắt đầu tự động</button><button id="chuNext" style="flex:1">Câu tiếp</button></div>
+<label class="s"><input type="checkbox" id="voice"> Đọc thành tiếng (nếu thiết bị hỗ trợ)</label>
+</section>
+
+<section class="panel" id="p-quet">
+<h2>Quét sân chùa</h2>
+<p class="s">Góc nhìn của bạn đứng giữa sân chùa. Giữ chuột hoặc chạm và vuốt chổi qua lá rụng để quét. Giữ nút hoặc phím W/S để bước tới, lùi. Mỗi lá +1 công đức.</p>
+<canvas id="yardc"></canvas>
+<div class="row"><button id="bUp" style="flex:1">⬆ Bước tới</button><button id="bDn" style="flex:1">⬇ Lùi</button><button id="leafBtn">🍂</button></div>
+<span class="s" id="leafCnt">Đã quét: 0</span>
+</section>
+
+<section class="panel" id="p-cd">
+<h2>Hòm công đức</h2>
+<p class="s">Cúng dường mang tính tượng trưng, không trừ tiền thật. Cứ 1.000đ được 1 công đức.</p>
+<div class="box" id="box">CÔNG ĐỨC</div>
+<div class="row" id="amts"></div>
+<input type="text" id="wish" maxlength="80" placeholder="Lời nguyện (không bắt buộc)">
+<button class="big pri" id="give">🪙 Bỏ vào hòm</button>
+<div class="log" id="log" style="margin-top:10px"></div>
+</section>
+
+<section class="panel" id="p-que">
+<h2>Xin quẻ giải nghiệp</h2>
+<p class="s">Thành tâm nghĩ về điều bạn băn khoăn, rồi lắc ống xăm. Mỗi lần xin tốn 3 công đức.</p>
+<div class="tube" id="tube">🏺</div>
+<button class="big pri" id="shake">Lắc ống xăm</button>
+<div class="que" id="que" style="margin-top:12px"></div>
+</section>
+
+<nav id="nav">
+<button class="on" data-t="nam"><span>🙏</span>Niệm</button>
+<button data-t="chu"><span>📿</span>Chú</button>
+<button data-t="quet"><span>🧹</span>Quét</button>
+<button data-t="cd"><span>🪙</span>Công đức</button>
+<button data-t="que"><span>🎋</span>Quẻ</button>
+</nav>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var S={merit:0,chants:0,money:0,swept:0,logs:[]};
+try{var raw=localStorage.getItem('chuaonline');if(raw)Object.assign(S,JSON.parse(raw))}catch(e){}
+function save(){try{localStorage.setItem('chuaonline',JSON.stringify(S))}catch(e){}}
+var ranks=[[0,'Thiện tín'],[50,'Cư sĩ'],[200,'Hộ pháp'],[600,'Bồ tát tại gia'],[1500,'Đại thí chủ']];
+function render(){
+$('sMerit').textContent=S.merit;$('sChant').textContent=S.chants;
+$('sMoney').textContent=S.money.toLocaleString('vi-VN')+'đ';
+var r=ranks[0][1];ranks.forEach(function(x){if(S.merit>=x[0])r=x[1]});$('sRank').textContent=r;
+$('log').innerHTML=S.logs.slice(0,5).map(function(l){return '• '+l}).join('<br>');
+save()}
+function add(n){S.merit+=n;render();pushPres()}
+var tt;function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('on')},1800)}
+var AC;function beep(f,d){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.3,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+
+/* tabs */
+var curTab='nam';
+$('nav').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+document.querySelectorAll('nav button').forEach(function(x){x.classList.toggle('on',x===b)});
+document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id==='p-'+b.dataset.t)});
+curTab=b.dataset.t;$('stage').style.display=curTab==='quet'?'none':'block';$('crowd').style.display=$('stage').style.display;
+setTimeout(function(){fit();fitY()},0);
+if(b.dataset.t!=='nam')stopAuto();if(b.dataset.t!=='chu')stopChu()};
+
+/* kneel */
+var kneel=false,TAGS=['Thích ăn thịt','Thích vô đây','Thích tạo nghiệp','Thích drama','Thích tào lao','Thích thì chiều','Thích niệm Phật','Thích nằm ngủ','Thích ăn vặt','Thích sống ảo','Thích im lặng','Thích đi chùa','Thích cúng dường','Thích trúng số','Thích nấu xôi','Thích ngồi thiền','Thích tàu hủ','Thích tùm lum'];
+S.name=S.name||('Phật tử '+(100+Math.floor(Math.random()*900)));S.tag=S.tag||TAGS[Math.floor(Math.random()*TAGS.length)];
+$('nm').value=S.name;$('tg').innerHTML=TAGS.map(function(t){return '<option'+(t===S.tag?' selected':'')+'>'+t+'</option>'}).join('');
+var MATS=[];for(var r=0;r<4;r++)for(var c=0;c<6;c++)MATS.push({x:150+c*140,y:170+r*110});
+var me={x:500,y:545,k:0,bow:0},tgt=null,keys={},peers=[],npcs=[],bub={},room=null,nPeers=0,cv=$('hall'),g=cv.getContext('2d'),W=0,H=0,lastP=0;
+function fit(){var r=cv.getBoundingClientRect();if(!r.width)return;var d=Math.min(window.devicePixelRatio||1,2);cv.width=r.width*d;cv.height=r.height*d;g.setTransform(d,0,0,d,0,0);W=r.width;H=r.height}
+function hy(){return H*.38}
+function P(x,y){var sc=.5+.8*y/600;return{x:W/2+(x-500)*sc*W/960,y:hy()+(y/600)*(H-hy()-14),s:sc}}
+function pushPres(){if(!room)return;try{room.presence({x:Math.round(me.x),y:Math.round(me.y),k:kneel?1:0,n:S.name,t:S.tag,c:S.chants})}catch(e){}}
+var lastSay=0;function say(m){bub.me={m:m,t:2.5};var n=Date.now();if(room&&n-lastSay>700){lastSay=n;try{room.emit('say',{m:m}).catch(function(){})}catch(e){}}}
+function setKneel(k){kneel=k;me.k=k?1:0;$('kneelBtn').textContent=k?'🧍 Đứng dậy':'🧎 Quỳ xuống';
+$('hint').textContent=k?'Đang quỳ trước Phật. Hãy niệm hoặc tụng chú.':'Chạm vào sàn hoặc dùng WASD / phím mũi tên để đi. Đến gần đệm rồi bấm Quỳ.';if(!k){stopAuto();stopChu()}pushPres()}
+$('kneelBtn').onclick=function(){if(kneel){setKneel(false);return}
+var b=null,bd=1e9;MATS.forEach(function(m){var d=Math.hypot(m.x-me.x,m.y-me.y);if(d<bd){bd=d;b=m}});
+if(bd>90){toast('Hãy đi tới gần một tấm đệm 🙏');return}me.x=b.x;me.y=b.y;tgt=null;setKneel(true)};
+function needKneel(){if(!kneel){toast('Hãy đi tới đệm và quỳ xuống trước nhé 🙏');return true}return false}
+$('nm').oninput=function(){S.name=this.value.slice(0,16)||'Phật tử';save();pushPres()};
+$('tg').onchange=function(){S.tag=this.value;save();pushPres()};
+cv.addEventListener('pointerdown',function(e){var r=cv.getBoundingClientRect(),sy=e.clientY-r.top,sx=e.clientX-r.left,y=(sy-hy())/(H-hy()-14)*600;if(y<90)y=90;var sc=.5+.8*y/600;tgt={x:500+(sx-W/2)/(sc*W/960),y:Math.min(y,570)};if(kneel)setKneel(false)});
+window.addEventListener('keydown',function(e){if(/INPUT|SELECT/.test(e.target.tagName))return;var k=e.key.toLowerCase();keys[k]=true;if(k.indexOf('arrow')==0)e.preventDefault()});
+window.addEventListener('keyup',function(e){keys[e.key.toLowerCase()]=false});
+for(var i=0;i<9;i++){var m=MATS[Math.floor(Math.random()*MATS.length)];npcs.push({x:m.x,y:m.y,k:1,w:Math.random()*8,tx:m.x,ty:m.y,t:TAGS[(i*2)%TAGS.length],n:'',c:0})}
+function npcStep(n,dt){if(n.w>0){n.w-=dt;if(n.w<=0){n.k=0;var m=MATS[Math.floor(Math.random()*MATS.length)];n.tx=m.x;n.ty=m.y}else if(n.k&&Math.random()<dt*.15)bub['n'+npcs.indexOf(n)]={m:'Nam mô A Di Đà Phật',t:2.5}}
+else{var dx=n.tx-n.x,dy=n.ty-n.y,d=Math.hypot(dx,dy);if(d<5){n.k=1;n.w=6+Math.random()*10}else{n.x+=dx/d*85*dt;n.y+=dy/d*85*dt}}}
+function monk(e,id,isMe,pr){var p=P(e.x,e.y),s=p.s*(W/420),k=e.k;
+g.fillStyle='rgba(0,0,0,.35)';g.beginPath();g.ellipse(p.x,p.y,13*s,5*s,0,0,6.3);g.fill();
+var bh=(k?12:24)*s,bw=20*s,by=p.y-bh+(e.bow||0)*s*30;
+g.fillStyle='#b9c7d3';g.beginPath();g.roundRect?g.roundRect(p.x-bw/2,by,bw,bh,6*s):g.rect(p.x-bw/2,by,bw,bh);g.fill();
+g.fillStyle='#e8b95a';g.fillRect(p.x,by+2*s,bw/2,bh-2*s);
+g.fillStyle='#e58a3c';g.beginPath();g.arc(p.x,by-8*s,10*s,0,6.3);g.fill();
+if(isMe){g.strokeStyle='#e8b95a';g.lineWidth=2;g.beginPath();g.arc(p.x,by-8*s,13*s,0,6.3);g.stroke()}
+g.textAlign='center';g.font='600 '+Math.max(9,11*s)+'px system-ui,sans-serif';var ty=by-24*s;
+g.lineWidth=3;g.strokeStyle='rgba(0,0,0,.7)';g.fillStyle=isMe?'#ffe08a':'#fff';g.strokeText(e.t||'',p.x,ty);g.fillText(e.t||'',p.x,ty);
+if(e.n){g.font=Math.max(8,9*s)+'px system-ui,sans-serif';g.fillStyle='#e8b95a';g.strokeText(e.n,p.x,ty-12*s);g.fillText(e.n,p.x,ty-12*s)}
+var b=bub[id];if(b&&b.t>0){var w=g.measureText(b.m).width+14;g.fillStyle='rgba(255,248,230,.95)';g.fillRect(p.x-w/2,ty-40*s-8,w,18);g.fillStyle='#3a2410';g.font='10px system-ui,sans-serif';g.fillText(b.m,p.x,ty-40*s+5)}}
+function drawHall(dt){if(!W)return;var h=hy(),sp=230*dt,mv=false,dx=0,dy=0;
+if(keys.a||keys.arrowleft)dx-=1;if(keys.d||keys.arrowright)dx+=1;if(keys.w||keys.arrowup)dy-=1;if(keys.s||keys.arrowdown)dy+=1;
+if(dx||dy){tgt=null;var l=Math.hypot(dx,dy);me.x+=dx/l*sp;me.y+=dy/l*sp;mv=true}
+else if(tgt){var a=tgt.x-me.x,b=tgt.y-me.y,d=Math.hypot(a,b);if(d<6)tgt=null;else{me.x+=a/d*Math.min(sp,d);me.y+=b/d*Math.min(sp,d);mv=true}}
+if(mv&&kneel)setKneel(false);me.x=Math.max(40,Math.min(960,me.x));me.y=Math.max(90,Math.min(575,me.y));
+if(me.bow>0)me.bow-=dt;
+if(mv&&Date.now()-lastP>90){lastP=Date.now();pushPres()}
+npcs.forEach(function(n){npcStep(n,dt)});for(var k in bub)bub[k].t-=dt;
+g.clearRect(0,0,W,H);var gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#3a1d12');gr.addColorStop(1,'#6b2c1a');g.fillStyle=gr;g.fillRect(0,0,W,h);
+g.fillStyle='rgba(232,185,90,.3)';g.beginPath();g.arc(W/2,h*.45,h*.5,0,6.3);g.fill();
+var u=h/200;g.fillStyle='#e2ad48';g.beginPath();g.arc(W/2,h*.3,16*u,0,6.3);g.fill();
+g.beginPath();g.moveTo(W/2-22*u,h*.7);g.lineTo(W/2-12*u,h*.38);g.lineTo(W/2+12*u,h*.38);g.lineTo(W/2+22*u,h*.7);g.fill();
+g.beginPath();g.ellipse(W/2,h*.74,52*u,12*u,0,0,6.3);g.fill();
+g.fillStyle='#7a4a22';g.fillRect(W/2-70*u,h*.82,140*u,h*.1);
+g.fillStyle='#f6f0dc';[-1,1].forEach(function(q){g.fillRect(W/2+q*62*u-2*u,h*.62,4*u,h*.2);g.fillStyle='#ffb347';g.fillRect(W/2+q*62*u-1*u,h*.58,2*u,5*u);g.fillStyle='#f6f0dc'});
+gr=g.createLinearGradient(0,h,0,H);gr.addColorStop(0,'#4a2e1b');gr.addColorStop(1,'#1a100a');g.fillStyle=gr;g.fillRect(0,h,W,H-h);
+g.strokeStyle='rgba(0,0,0,.35)';g.lineWidth=1;for(var x=0;x<=1000;x+=125){var a1=P(x,0),a2=P(x,600);g.beginPath();g.moveTo(a1.x,a1.y);g.lineTo(a2.x,a2.y);g.stroke()}
+for(var y=0;y<=600;y+=100){var q=P(0,y);g.beginPath();g.moveTo(0,q.y);g.lineTo(W,q.y);g.stroke()}
+MATS.forEach(function(m){var q=P(m.x,m.y),s=q.s*(W/420);g.fillStyle='#34302c';g.fillRect(q.x-20*s,q.y-7*s,40*s,14*s)});
+var list=[];npcs.forEach(function(n,i){if(nPeers<2)list.push({e:n,id:'n'+i})});peers.forEach(function(p){list.push({e:p,id:p.id})});list.push({e:me,id:'me',me:1});
+me.t=S.tag;me.n=S.name;list.sort(function(a,b){return a.e.y-b.e.y});list.forEach(function(o){monk(o.e,o.id,o.me)})}
+/* tabs-end */
+
+/* niệm */
+var auto=null;
+function hit(){if(needKneel()){stopAuto();return}
+beep(320,.35);$('fish').classList.add('hit');me.bow=.15;
+setTimeout(function(){$('fish').classList.remove('hit')},120);
+say('Nam mô A Di Đà Phật');S.chants++;$('chantLine').textContent='Nam mô A Di Đà Phật ('+S.chants+')';add(1)}
+$('hit').onclick=hit;
+function stopAuto(){if(auto){clearInterval(auto);auto=null}$('autoBtn').textContent='⏵ Tự động niệm'}
+$('autoBtn').onclick=function(){if(auto){stopAuto();return}if(needKneel())return;
+$('autoBtn').textContent='⏸ Dừng';auto=setInterval(hit,1100)};
+
+/* chú */
+var CHU={
+'Chú Vãng Sanh':['Nam mô a di đa bà dạ','Đa tha già đa dạ','Đa điệt dạ tha','A di rị đô bà tỳ','A di rị đa tất đam bà tỳ','A di rị đa tỳ ca lan đế','A di rị đa tỳ ca lan đa','Già di nị già già na','Chỉ đa ca lệ','Ta bà ha'],
+'Chú Đại Bi':'Nam mô hắc ra đát na đa ra dạ da. Nam mô a rị da. Bà lô yết đế thước bát ra da. Bồ đề tát đỏa bà da. Ma ha tát đỏa bà da. Ma ha ca lô ni ca da. Án. Tát bàn ra phạt duệ. Số đán na đát tả. Nam mô tất kiết lật đỏa y mông a rị da. Bà lô kiết đế thất Phật ra lăng đà bà. Nam mô na ra cẩn trì. Hê rị ma ha bàn đa sa mế. Tát bà a tha đậu du bằng. A thệ dựng. Tát bà tát đa na ma bà tát đa. Na ma bà già. Ma phạt đặc đậu. Đát điệt tha. Án. A bà lô hê. Lô ca đế. Ca ra đế. Di hê rị. Ma ha bồ đề tát đỏa. Tát bà tát bà. Ma ra ma ra. Ma hê ma hê rị đà dựng. Cu lô cu lô yết mông. Độ lô độ lô phạt xà da đế. Ma ha phạt xà da đế. Đà ra đà ra. Địa rị ni. Thất Phật ra da. Giá ra giá ra. Ma ma phạt ma ra. Mục đế lệ. Y hê y hê. Thất na thất na. A ra sâm Phật ra xá lợi. Phạt sa phạt sâm. Phật ra xá da. Hô lô hô lô ma ra. Hô lô hô lô hê rị. Ta ra ta ra. Tất rị tất rị. Tô rô tô rô. Bồ đề dạ bồ đề dạ. Bồ đà dạ bồ đà dạ. Di đế rị dạ. Na ra cẩn trì. Địa rị sắc ni na. Ba dạ ma na. Ta bà ha. Tất đà dạ. Ta bà ha. Ma ha tất đà dạ. Ta bà ha. Tất đà dũ nghệ. Thất bàn ra dạ. Ta bà ha. Na ra cẩn trì. Ta bà ha. Ma ra na ra. Ta bà ha. Tất ra tăng a mục khư da. Ta bà ha. Ta bà ma ha a tất đà dạ. Ta bà ha. Giả cát ra a tất đà dạ. Ta bà ha. Ba đà ma yết tất đà dạ. Ta bà ha. Na ra cẩn trì bàn đà ra dạ. Ta bà ha. Ma bà lị thắng yết ra dạ. Ta bà ha. Nam mô hắc ra đát na đa ra dạ da. Nam mô a rị da. Bà lô yết đế. Thước bàn ra dạ. Ta bà ha. Án. Tất điện đô. Mạn đa ra. Bạt đà dạ. Ta bà ha.'.split('. ').map(function(x){return x.replace(/\.$/,'')}),
+'Kệ Hồi Hướng':['Nguyện đem công đức này','Hướng về khắp tất cả','Đệ tử và chúng sanh','Đều trọn thành Phật đạo']};
+var cur='Chú Đại Bi',ci=-1,ct=null;
+function drawChu(){var h='';CHU[cur].forEach(function(l,i){h+='<div>'+l+'</div>'});$('chant').innerHTML=h;ci=-1;$('chant').scrollTop=0;
+$('chuTabs').innerHTML=Object.keys(CHU).map(function(k){return '<button class="'+(k===cur?'sel':'')+'" data-k="'+k+'">'+k+'</button>'}).join('')}
+$('chuTabs').onclick=function(e){var b=e.target.closest('button');if(!b)return;stopChu();cur=b.dataset.k;drawChu()};
+function nextLine(){if(needKneel()){stopChu();return}
+var ls=$('chant').children,L=CHU[cur];
+if(ci>=0){ls[ci].className='done'}
+ci++;
+if(ci>=L.length){stopChu();ci=-1;S.chants++;add(10);toast('Hoàn thành '+cur+' · +10 công đức');drawChu();return}
+ls[ci].className='on';$('chant').scrollTop=ls[ci].offsetTop-80;beep(520,.2);say(L[ci]);
+if($('voice').checked&&window.speechSynthesis){try{var u=new SpeechSynthesisUtterance(L[ci]);u.lang='vi-VN';u.rate=.7;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}}
+function stopChu(){if(ct){clearInterval(ct);ct=null}$('chuGo').textContent='▶ Bắt đầu tự động'}
+$('chuGo').onclick=function(){if(ct){stopChu();return}if(needKneel())return;$('chuGo').textContent='⏸ Dừng';nextLine();ct=setInterval(nextLine,2200)};
+$('chuNext').onclick=nextLine;
+drawChu();
+
+/* quét sân */
+var yc=$('yardc'),yg=yc.getContext('2d'),YW=0,YH=0,cam=0,camT=0,YL=[],bx=0,by=0,yardSwept=0,em=['🍂','🍁','🍃'],done=false;
+function fitY(){var r=yc.getBoundingClientRect();if(!r.width)return;var d=Math.min(window.devicePixelRatio||1,2);yc.width=r.width*d;yc.height=r.height*d;yg.setTransform(d,0,0,d,0,0);YW=r.width;YH=r.height;if(!bx){bx=YW/2;by=YH*.8}}
+function yh(){return YH*.3}
+function Y(x,z){var s=1/z;return{x:YW/2+x*s*YW*.42,y:yh()+(YH-yh())*.95*s,s:s}}
+function spawn(){YL=[];for(var i=0;i<46;i++){var z=1.3+Math.random()*7;YL.push({x:(Math.random()*2-1)*z*.95,z:z,r:Math.random()*6.28,e:em[i%3],d:0})}yardSwept=0;done=false;$('leafCnt').textContent='Đã quét: 0'}
+function sweepAt(){var n=0;YL.forEach(function(l){if(l.d)return;var z=l.z-cam;if(z<.55||z>9)return;var p=Y(l.x,z);if(Math.hypot(p.x-bx,p.y-by)<24+34*p.s){l.d=.01;n++;S.swept++;yardSwept++;add(1);beep(180,.06)}});
+if(n){$('leafCnt').textContent='Đã quét: '+yardSwept}
+if(!done&&YL.length&&YL.every(function(l){return l.d})){done=true;toast('Sân chùa sạch bóng! +5 công đức');add(5);setTimeout(spawn,1800)}}
+function ptr(e){var r=yc.getBoundingClientRect();bx=e.clientX-r.left;by=e.clientY-r.top;if(e.buttons||e.pointerType==='touch')sweepAt()}
+yc.addEventListener('pointermove',ptr);yc.addEventListener('pointerdown',function(e){try{yc.setPointerCapture(e.pointerId)}catch(x){}ptr(e)});
+$('bUp').onpointerdown=function(){keys.w=true};$('bDn').onpointerdown=function(){keys.s=true};
+window.addEventListener('pointerup',function(){if(curTab==='quet'){keys.w=false;keys.s=false}});
+$('leafBtn').onclick=spawn;
+function drawYard(dt){if(!YW)return;var h=yh(),G=yg;
+if(keys.w||keys.arrowup)camT=Math.min(4,camT+dt*2);if(keys.s||keys.arrowdown)camT=Math.max(0,camT-dt*2);cam+=(camT-cam)*Math.min(1,dt*6);
+var gr=G.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#2b3a5a');gr.addColorStop(1,'#e8a064');G.fillStyle=gr;G.fillRect(0,0,YW,h);
+var t=1+cam*.25,cx=YW/2,u=h/100*t;
+G.fillStyle='#2f5d34';[[.08,.55],[.18,.7],[.9,.6],[.82,.72]].forEach(function(q){G.beginPath();G.arc(YW*q[0],h*q[1],h*.35*t,0,6.3);G.fill()});
+G.fillStyle='#7a2a1c';G.fillRect(cx-38*u/2.2,h-30*u/2,6*u/2.2,30*u/2);G.fillRect(cx+32*u/2.2,h-30*u/2,6*u/2.2,30*u/2);
+G.fillStyle='#2a140e';G.fillRect(cx-32*u/2.2,h-24*u/2,64*u/2.2,24*u/2);
+G.fillStyle='#c9a24c';G.beginPath();G.moveTo(cx-50*u/2.2,h-30*u/2);G.lineTo(cx+50*u/2.2,h-30*u/2);G.lineTo(cx+30*u/2.2,h-44*u/2);G.lineTo(cx-30*u/2.2,h-44*u/2);G.fill();
+gr=G.createLinearGradient(0,h,0,YH);gr.addColorStop(0,'#8a7458');gr.addColorStop(1,'#b8a27e');G.fillStyle=gr;G.fillRect(0,h,YW,YH-h);
+G.strokeStyle='rgba(60,45,30,.35)';G.lineWidth=1;
+for(var k=1;k<=10;k++){var zz=k-(cam%1),q=Y(0,zz);G.beginPath();G.moveTo(0,q.y);G.lineTo(YW,q.y);G.stroke()}
+for(var i=-10;i<=10;i++){var a=Y(i,9.5),b=Y(i,.55);G.beginPath();G.moveTo(a.x,a.y);G.lineTo(b.x,b.y);G.stroke()}
+YL.sort(function(a,b){return b.z-a.z});G.textAlign='center';G.textBaseline='middle';
+YL.forEach(function(l){var z=l.z-cam;if(l.d){l.d+=dt*3}if(z<.55||z>9||l.d>=1)return;var p=Y(l.x,z);
+G.save();G.translate(p.x,p.y);G.rotate(l.r+l.d*4);G.globalAlpha=1-l.d;G.font=Math.max(8,34*p.s*(1-l.d*.6))+'px serif';G.fillText(l.e,0,0);G.restore()});
+var hx=YW/2+(bx-YW/2)*.35,hyy=YH+40,ang=Math.atan2(by-hyy,bx-hx);
+G.strokeStyle='#6b4423';G.lineWidth=7;G.lineCap='round';G.beginPath();G.moveTo(hx,hyy);G.lineTo(bx,by);G.stroke();
+G.save();G.translate(bx,by);G.rotate(ang-Math.PI/2);G.fillStyle='#c9a24c';G.beginPath();G.moveTo(-9,0);G.lineTo(9,0);G.lineTo(34,-44);G.lineTo(-34,-44);G.fill();
+G.strokeStyle='#8a6a2a';G.lineWidth=1.5;for(var j=-30;j<=30;j+=6){G.beginPath();G.moveTo(j*.3,-4);G.lineTo(j,-44);G.stroke()}G.restore()}
+spawn();
+/* loop */
+function resizeAll(){fit();fitY()}window.addEventListener('resize',resizeAll);
+var lastT=0;function loop(t){var dt=Math.min((t-lastT)/1000,.05)||.016;lastT=t;try{if(curTab==='quet')drawYard(dt);else drawHall(dt)}catch(e){}requestAnimationFrame(loop)}
+resizeAll();requestAnimationFrame(loop);
+/* room */
+(window.claude&&claude.use?claude.use('room'):Promise.resolve(null)).then(function(r){if(!r)return;room=r;
+r.onPeers(function(c){var all=c.peers.filter(function(p){return p.kind!=='agent'});nPeers=all.length;var tot=0;
+peers=all.filter(function(p){return !p.isMe&&p.presence&&typeof p.presence.x==='number'}).map(function(p){var q=p.presence;return{id:p.peer,x:q.x,y:q.y,k:q.k,n:String(q.n||'').slice(0,16),t:String(q.t||'').slice(0,24)}});
+all.forEach(function(p){tot+=(p.presence&&+p.presence.c)||0});
+$('crowd').textContent='🌐 '+nPeers+' người đang ở chùa · cộng đồng đã niệm '+tot+' câu'});
+r.on('say',function(m){var d=m.data||{};if(m.isMe||typeof d.m!=='string')return;bub[m.peer]={m:d.m.slice(0,40),t:2.5}});
+pushPres()});
+setTimeout(function(){if(!room)$('crowd').textContent='🌐 Chế độ một mình (đăng nhập claude.ai để gặp người khác)'},4000);
+
+/* công đức */
+var amt=10000;
+$('amts').innerHTML=[1000,5000,10000,50000,100000].map(function(a){return '<button data-a="'+a+'" class="'+(a===amt?'sel':'')+'">'+a.toLocaleString('vi-VN')+'đ</button>'}).join('');
+$('amts').onclick=function(e){var b=e.target.closest('button');if(!b)return;amt=+b.dataset.a;[].forEach.call($('amts').children,function(x){x.classList.toggle('sel',x===b)})};
+$('give').onclick=function(){var c=document.createElement('div');c.className='coin';c.textContent='🪙';$('box').appendChild(c);setTimeout(function(){c.remove()},900);
+beep(880,.25);S.money+=amt;var w=$('wish').value.trim();
+S.logs.unshift(amt.toLocaleString('vi-VN')+'đ'+(w?' · "'+w.replace(/</g,'&lt;')+'"':''));S.logs=S.logs.slice(0,20);
+$('wish').value='';add(Math.max(1,Math.floor(amt/1000)));toast('Cảm ơn tấm lòng của bạn 🙏')};
+
+/* quẻ */
+var Q=[
+['Thượng cát','Gió xuân đưa hạt nảy mầm, lòng lành ắt gặp quý nhân phù trì.','Nghiệp lành đang đơm hoa. Hãy giữ tâm khiêm hạ và đừng khoe khoang.','Tiếp tục tụng Kệ Hồi Hướng để chia sẻ phước.'],
+['Thượng cát','Trăng rằm soi mặt hồ trong, việc dù khó cũng thông dần.','Điều bạn lo lắng sắp có lối ra, miễn là bạn chịu bắt tay làm.','Cúng dường nhỏ và quét sân chùa để giữ đà may mắn.'],
+['Trung cát','Thuyền qua ghềnh dữ, nắm chắc tay chèo sẽ tới bến.','Có chướng ngại do nóng vội gây ra. Chậm lại một nhịp thì thành.','Niệm Phật 108 câu để tâm an.'],
+['Trung cát','Mây che nhưng trăng vẫn sáng, chớ nghi ngờ chính mình.','Nghiệp cũ về chuyện lời nói đang chín. Hãy xin lỗi người từng bị bạn làm tổn thương.','Tụng Chú Vãng Sanh một lượt.'],
+['Trung bình','Đường dài có đá sỏi, nhưng quanh co rồi cũng thẳng.','Bạn đang gánh việc không thuộc về mình. Hãy học cách buông bớt.','Quét sân chùa: quét lá cũng là quét lòng.'],
+['Trung bình','Nước đứng thì đục, nước chảy thì trong.','Bạn bị mắc kẹt vì thói quen cũ. Hãy đổi một việc nhỏ mỗi ngày.','Tụng Chú Đại Bi để thanh lọc tâm.'],
+['Hạ hạ','Cây nghiêng vì gió lớn, bám rễ sâu sẽ không đổ.','Nghiệp từ sự ích kỷ hoặc hơn thua đang đòi trả. Đừng sợ, đây là lời nhắc để sửa.','Làm một việc thiện ngoài đời, rồi quay lại tụng Chú Đại Bi.'],
+['Thượng cát','Đèn sáng một ngọn, soi cả gian nhà tối.','Sự tử tế của bạn đang âm thầm cứu lấy nhiều người. Hãy tin vào điều đó.','Bỏ một ít vào hòm công đức kèm lời nguyện.'],
+['Trung cát','Đất khô gặp mưa, hạn lâu cũng hết.','Giai đoạn khó sắp qua. Việc bạn cần là kiên nhẫn và giữ sức khỏe.','Niệm Phật tự động vài phút để tĩnh tâm.']];
+var busy=false;
+$('shake').onclick=function(){if(busy)return;
+if(S.merit<3){toast('Cần ít nhất 3 công đức. Hãy niệm hoặc quét sân trước 🙏');return}
+busy=true;S.merit-=3;render();$('que').style.display='none';$('tube').classList.add('shake');
+var n=0,iv=setInterval(function(){beep(200+Math.random()*200,.05);if(++n>8)clearInterval(iv)},150);
+setTimeout(function(){$('tube').classList.remove('shake');var q=Q[Math.floor(Math.random()*Q.length)],no=Math.floor(Math.random()*100)+1;
+var el=$('que');el.innerHTML='<h3>Quẻ số '+no+' · '+q[0]+'</h3><em>'+q[1]+'</em><b>Giải nghiệp:</b> '+q[2]+'<br><b>Hóa giải:</b> '+q[3]+'<p class="s" style="margin:10px 0 0">Quẻ mang tính giải trí và gợi ý tinh thần, không thay thế quyết định thực tế của bạn.</p>';
+el.style.display='block';busy=false},1300)};
+
+render();
+</script>
+</body>
+</html>
